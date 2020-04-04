@@ -9,37 +9,12 @@ import java.util.Random;
 public class MancalaPanel extends JPanel {
   private MancalaGameModel model;
   private boolean isA;
-
   private Random random;
-  private RoundRectangle2D.Double mancala;
-
-  private static final int PANEL_WIDTH = 100;
-  private static final int MANCALA_WIDTH = (int) (.8f * PANEL_WIDTH);
-  private static final int MANCALA_HEIGHT = (int) (.8f * MancalaGameView.PANEL_HEIGHT);
-  private static final int MANCALA_X = (PANEL_WIDTH - MANCALA_WIDTH) / 2;
-  private static final int MANCALA_Y = (MancalaGameView.PANEL_HEIGHT - MANCALA_HEIGHT) / 2;
-  private static final int MANCALA_ARC_WIDTH = PANEL_WIDTH;
-  private static final int MANCALA_ARC_HEIGHT = MancalaGameView.PANEL_HEIGHT / 6;
 
   public MancalaPanel(MancalaGameModel model, boolean isA) {
     this.model = model;
     this.isA = isA;
-
-    Dimension size = new Dimension(PANEL_WIDTH, MancalaGameView.PANEL_HEIGHT);
-    setPreferredSize(size);
-    setMinimumSize(size);
-    setMaximumSize(size);
-    setSize(size);
-
     random = new Random();
-    mancala =
-        new RoundRectangle2D.Double(
-            MANCALA_X,
-            MANCALA_Y,
-            MANCALA_WIDTH,
-            MANCALA_HEIGHT,
-            MANCALA_ARC_WIDTH,
-            MANCALA_ARC_HEIGHT);
   }
 
   @Override
@@ -48,21 +23,34 @@ public class MancalaPanel extends JPanel {
     Graphics2D g2 = (Graphics2D) g;
 
     // Actual mancala
+    float mancalaWidth = 0.8f * getWidth();
+    float mancalaHeight = 0.8f * getHeight();
+    float mancalaX = (getWidth() - mancalaWidth) / 2;
+    float mancalaY = (getHeight() - mancalaHeight) / 2;
+    RoundRectangle2D.Double mancala =
+        new RoundRectangle2D.Double(
+            mancalaX,
+            mancalaY,
+            mancalaWidth,
+            mancalaHeight,
+            mancalaWidth,
+            (1f / 6f) * mancalaHeight);
     g2.setStroke(MancalaGameView.STROKE);
     g2.draw(mancala);
 
     // Draw randomly positioned marbles
     int numMarbles =
         model.getMarbles(isA ? MancalaGameModel.A_MANCALA_POS : MancalaGameModel.B_MANCALA_POS);
+    float marbleSize = 0.2f * getWidth();
+    float padding = 1.5f * marbleSize;
     for (int i = 0; i < numMarbles; i++) {
-      int minX = MANCALA_X + MancalaGameView.MARBLE_WIDTH;
-      int maxX = MANCALA_X + MANCALA_WIDTH - MancalaGameView.MARBLE_WIDTH;
-      int x = MANCALA_X + random.nextInt(maxX - minX + 1);
-      int minY = MANCALA_Y + MancalaGameView.MARBLE_WIDTH;
-      int maxY = MANCALA_Y + MANCALA_HEIGHT - MancalaGameView.MARBLE_WIDTH;
-      int y = MANCALA_Y + random.nextInt(maxY - minY + 1);
-      g2.fill(
-          new Ellipse2D.Double(x, y, MancalaGameView.MARBLE_WIDTH, MancalaGameView.MARBLE_WIDTH));
+      float minX = mancalaX + padding;
+      float maxX = mancalaX + mancalaWidth - padding;
+      float x = mancalaX + random.nextFloat() * (maxX - minX);
+      float minY = mancalaY + padding;
+      float maxY = mancalaY + mancalaHeight - padding;
+      float y = mancalaY + random.nextFloat() * (maxY - minY);
+      g2.fill(new Ellipse2D.Double(x, y, marbleSize, marbleSize));
     }
   }
 }

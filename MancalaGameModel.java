@@ -14,6 +14,8 @@ public class MancalaGameModel {
   private int[] board; // the current board
   private int[] previousBoard; // the previous board (if undo is chosen)
 
+  private boolean isPlayerATurn;
+
   public static final int TOTAL_NUM_PITS = 14;
   public static final int NUM_PITS_PER_PLAYER = TOTAL_NUM_PITS / 2 - 1;
   public static final int A_MANCALA_POS = TOTAL_NUM_PITS / 2 - 1;
@@ -39,6 +41,9 @@ public class MancalaGameModel {
     board = new int[TOTAL_NUM_PITS];
     previousBoard = new int[TOTAL_NUM_PITS];
     cListeners = new ArrayList<>();
+
+    // 50-50 chance for who starts
+    isPlayerATurn = Math.random() < 0.5f;
   }
 
   /**
@@ -53,7 +58,7 @@ public class MancalaGameModel {
         previousBoard[i] = numStones;
       } else {
         board[i] = 0;
-        previousBoard[i] = numStones;
+        previousBoard[i] = 0;
       }
     }
   }
@@ -201,5 +206,14 @@ public class MancalaGameModel {
    */
   public int getMarbles(int index) {
     return board[index];
+  }
+
+  /**
+   * Returns whether it is Player A's turn.
+   *
+   * @return whether it is Player A's turn
+   */
+  public boolean isPlayerATurn() {
+    return isPlayerATurn;
   }
 }
