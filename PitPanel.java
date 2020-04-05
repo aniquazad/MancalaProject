@@ -81,18 +81,20 @@ public class PitPanel extends JPanel {
 
     // Draw randomly positioned marbles
     float marbleSize = 0.2f * getWidth();
-    float padding = 1f * marbleSize;
     for (int i = 0; i < numMarbles; i++) {
-      float minX = pitX + padding;
-      float maxX = pitX + pitWidth - padding;
-      x = pitX + random.nextFloat() * (maxX - minX);
-      float minY = pitY + padding;
-      float maxY = pitY + pitHeight - padding;
-      y = pitY + random.nextFloat() * (maxY - minY);
+      Ellipse2D.Double marble;
+
+      // Keep randomly placing marble until it is completely inside the pit
+      do {
+        x = pitX + random.nextFloat() * (pitWidth - marbleSize);
+        y = pitY + random.nextFloat() * (pitHeight - marbleSize);
+        marble = new Ellipse2D.Double(x, y, marbleSize, marbleSize);
+      } while (!pit.contains(marble.x, marble.y, marble.width, marble.height));
+
       g2.setColor(Color.GRAY);
-      g2.fill(new Ellipse2D.Double(x, y, marbleSize, marbleSize));
+      g2.fill(marble);
       g2.setColor(Color.BLACK);
-      g2.draw(new Ellipse2D.Double(x, y, marbleSize, marbleSize));
+      g2.draw(marble);
     }
   }
 }

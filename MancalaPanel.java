@@ -38,19 +38,39 @@ public class MancalaPanel extends JPanel {
     g2.setStroke(MancalaGameView.STROKE);
     g2.draw(mancala);
 
-    // Draw randomly positioned marbles
+    // Marble count
+    g2.setFont(MancalaGameView.FONT);
+    FontMetrics metrics = g2.getFontMetrics();
     int numMarbles =
         model.getMarbles(isA ? MancalaGameModel.A_MANCALA_POS : MancalaGameModel.B_MANCALA_POS);
+    String marbleStr = String.valueOf(numMarbles);
+    float x = (getWidth() - metrics.stringWidth(marbleStr)) / 2;
+    float y =
+        isA
+            ? mancalaY + mancalaHeight - MancalaGameView.PADDING
+            : mancalaY + metrics.getAscent() + MancalaGameView.PADDING;
+    g2.drawString(marbleStr, x, y);
+
+    // Draw randomly positioned marbles
+
     float marbleSize = 0.2f * getWidth();
-    float padding = 1.5f * marbleSize;
     for (int i = 0; i < numMarbles; i++) {
-      float minX = mancalaX + padding;
-      float maxX = mancalaX + mancalaWidth - padding;
-      float x = mancalaX + random.nextFloat() * (maxX - minX);
-      float minY = mancalaY + padding;
-      float maxY = mancalaY + mancalaHeight - padding;
-      float y = mancalaY + random.nextFloat() * (maxY - minY);
-      g2.fill(new Ellipse2D.Double(x, y, marbleSize, marbleSize));
+      Ellipse2D.Double marble;
+
+      // Keep randomly placing marble until it is completely inside the pit
+      do {
+        x = mancalaX + random.nextFloat() * (mancalaWidth - marbleSize);
+        y =
+            mancalaY
+                + (isA ? 0 : 0.2f * mancalaHeight)
+                + random.nextFloat() * (0.8f * mancalaHeight - marbleSize);
+        marble = new Ellipse2D.Double(x, y, marbleSize, marbleSize);
+      } while (!mancala.contains(marble.x, marble.y, marble.width, marble.height));
+
+      g2.setColor(Color.GRAY);
+      g2.fill(marble);
+      g2.setColor(Color.BLACK);
+      g2.draw(marble);
     }
   }
 }

@@ -34,39 +34,64 @@ public class MancalaGameView extends JFrame implements ChangeListener {
     turnLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, UPPER_LOWER_PANEL_HEIGHT));
     turnPanel.add(turnLabel);
 
+    JPanel gamePanel = new JPanel();
+    gamePanel.setLayout(new GridBagLayout());
+
     MancalaPanel leftMancalaPanel = new MancalaPanel(model, false);
     leftMancalaPanel.setPreferredSize(new Dimension(PIT_WIDTH, GAME_PANEL_HEIGHT));
     leftMancalaPanel.setMaximumSize(new Dimension(PIT_WIDTH, Integer.MAX_VALUE));
 
-    JPanel pitGridPanel = new JPanel();
-    pitGridPanel.setLayout(new GridLayout(2, 6));
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.fill = GridBagConstraints.BOTH;
+    constraints.gridheight = 2;
+    constraints.gridx = 0;
+    constraints.gridy = 0;
+    constraints.weightx = 0.5;
+    constraints.weighty = 0.5f;
+    gamePanel.add(leftMancalaPanel, constraints);
 
     // Add Player B pits
-    for (int i = MancalaGameModel.B_MANCALA_POS - 1; i > MancalaGameModel.A_MANCALA_POS; i--) {
-      PitPanel pitPanel = new PitPanel(model, i, false);
+    for (int i = 0; i < MancalaGameModel.NUM_PITS_PER_PLAYER; i++) {
+      PitPanel pitPanel = new PitPanel(model, MancalaGameModel.B_MANCALA_POS - 1 - i, false);
       pitPanel.setPreferredSize(new Dimension(PIT_WIDTH, PIT_HEIGHT));
       pitPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-      pitGridPanel.add(pitPanel);
+
+      constraints = new GridBagConstraints();
+      constraints.fill = GridBagConstraints.BOTH;
+      constraints.gridx = 1 + i;
+      constraints.gridy = 0;
+      constraints.weightx = 0.5;
+      constraints.weighty = 0.5f;
+      gamePanel.add(pitPanel, constraints);
     }
 
     // Add Player A pits
-    for (int i = 0; i < MancalaGameModel.A_MANCALA_POS; i++) {
+    for (int i = 0; i < MancalaGameModel.NUM_PITS_PER_PLAYER; i++) {
       PitPanel pitPanel = new PitPanel(model, i, true);
       pitPanel.setPreferredSize(new Dimension(PIT_WIDTH, PIT_HEIGHT));
       pitPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-      pitGridPanel.add(pitPanel);
+
+      constraints = new GridBagConstraints();
+      constraints.fill = GridBagConstraints.BOTH;
+      constraints.gridx = 1 + i;
+      constraints.gridy = 1;
+      constraints.weightx = 0.5;
+      constraints.weighty = 0.5f;
+      gamePanel.add(pitPanel, constraints);
     }
 
     MancalaPanel rightMancalaPanel = new MancalaPanel(model, true);
     rightMancalaPanel.setPreferredSize(new Dimension(PIT_WIDTH, GAME_PANEL_HEIGHT));
     rightMancalaPanel.setMaximumSize(new Dimension(PIT_WIDTH, Integer.MAX_VALUE));
 
-    JPanel gamePanel = new JPanel();
-    gamePanel.setBackground(Color.RED);
-    gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.X_AXIS));
-    gamePanel.add(leftMancalaPanel);
-    gamePanel.add(pitGridPanel);
-    gamePanel.add(rightMancalaPanel);
+    constraints = new GridBagConstraints();
+    constraints.fill = GridBagConstraints.BOTH;
+    constraints.gridheight = 2;
+    constraints.gridx = 7;
+    constraints.gridy = 0;
+    constraints.weightx = 0.5;
+    constraints.weighty = 0.5f;
+    gamePanel.add(rightMancalaPanel, constraints);
 
     JButton undoButton = new JButton("Undo");
     undoButton.setFont(FONT);

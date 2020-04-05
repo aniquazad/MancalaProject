@@ -1,7 +1,8 @@
 package ram;
 
-import java.util.*;
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.util.ArrayList;
 
 /**
  * The MancalaGameModel is the model portion of the MVC pattern. It has data related to the game and
