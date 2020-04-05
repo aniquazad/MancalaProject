@@ -23,7 +23,7 @@ public class MancalaModel {
   public static final int A_MANCALA_POS = TOTAL_NUM_PITS / 2 - 1;
   public static final int B_MANCALA_POS = TOTAL_NUM_PITS - 1;
 
-  private boolean justUndo = true;
+  private boolean isJustUndo = true;
   private int undoCount;
   private static final int MAX_UNDO_COUNT = 3;
 
@@ -89,8 +89,8 @@ public class MancalaModel {
    */
   public void undoMove() {
     // Check if can undo
-    if (!justUndo && undoCount < MAX_UNDO_COUNT) {
-      justUndo = true;
+    if (!isJustUndo && undoCount < MAX_UNDO_COUNT) {
+      isJustUndo = true;
       undoCount++;
 
       // Apply undo
@@ -246,7 +246,7 @@ public class MancalaModel {
     }
 
     // Allow undo
-    justUndo = false;
+    isJustUndo = false;
 
     // Update view
     updateBoard();

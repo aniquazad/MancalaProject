@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java.util.Random;
 
 import static ram.MenuView.FONT_18;
@@ -15,14 +16,18 @@ public class PitPanel extends JPanel {
   private int index;
   private boolean isA;
   private MancalaStyle style;
+
   private Random random;
+  private ArrayList<Ellipse2D.Double> marbles;
 
   public PitPanel(MancalaModel model, int index, boolean isA, MancalaStyle style) {
     this.model = model;
     this.index = index;
     this.isA = isA;
     this.style = style;
+
     random = new Random();
+    marbles = new ArrayList<>();
   }
 
   @Override
@@ -84,16 +89,27 @@ public class PitPanel extends JPanel {
 
     // Draw randomly positioned marbles
     float marbleSize = 0.2f * getWidth();
-    for (int i = 0; i < numMarbles; i++) {
-      Ellipse2D.Double marble;
 
-      // Keep randomly placing marble until it is completely inside the pit
-      do {
-        x = pitX + random.nextFloat() * (pitWidth - marbleSize);
-        y = pitY + random.nextFloat() * (pitHeight - marbleSize);
-        marble = new Ellipse2D.Double(x, y, marbleSize, marbleSize);
-      } while (!pit.contains(marble.x, marble.y, marble.width, marble.height));
+    // Different number of marbles, re-randomize
+    if (numMarbles != marbles.size()) {
+      marbles.clear();
 
+      for (int i = 0; i < numMarbles; i++) {
+        Ellipse2D.Double marble;
+
+        // Keep randomly placing marble until it is completely inside the pit
+        do {
+          x = pitX + random.nextFloat() * (pitWidth - marbleSize);
+          y = pitY + random.nextFloat() * (pitHeight - marbleSize);
+          marble = new Ellipse2D.Double(x, y, marbleSize, marbleSize);
+        } while (!pit.contains(marble.x, marble.y, marble.width, marble.height));
+
+        marbles.add(marble);
+      }
+    }
+
+    // Draw marbles
+    for (Ellipse2D.Double marble : marbles) {
       g2.setColor(style.getMarbleFillColor());
       g2.fill(marble);
       g2.setColor(style.getMarbleDrawColor());
