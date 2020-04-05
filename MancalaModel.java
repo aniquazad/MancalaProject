@@ -230,8 +230,11 @@ public class MancalaModel {
         /* Edge case 3: if last stone is in empty pit on your side => take stone and stones from
          * opposite side of opponent's pit and put in your Mancala
          */
-        if (stonesToDrop == 1 && index < A_MANCALA_POS && board[index] == 0) {
-          int oppositeIndex = B_MANCALA_POS - 1 - index;
+        int oppositeIndex = B_MANCALA_POS - 1 - index;
+        if (stonesToDrop == 1
+            && index < A_MANCALA_POS
+            && board[oppositeIndex] > 0
+            && board[index] == 0) {
           int oppositeStoneCount = getMarbles(oppositeIndex);
           board[oppositeIndex] = 0;
           board[A_MANCALA_POS] += (1 + oppositeStoneCount);
@@ -254,11 +257,12 @@ public class MancalaModel {
         /* Edge case 3: if last stone is in empty pit on your side => take stone and stones from
          * opposite side of opponent's pit and put in your Mancala
          */
+        int oppositeIndex = B_MANCALA_POS - 1 - index;
         if (stonesToDrop == 1
             && index > A_MANCALA_POS
             && index < B_MANCALA_POS
+            && board[oppositeIndex] > 0
             && board[index] == 0) {
-          int oppositeIndex = B_MANCALA_POS - 1 - index;
           int oppositeStoneCount = getMarbles(oppositeIndex);
           board[oppositeIndex] = 0;
           board[B_MANCALA_POS] += (1 + oppositeStoneCount);
