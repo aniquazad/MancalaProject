@@ -195,7 +195,90 @@ public class MancalaModel {
    * @param index the index of the pit
    */
   public void move(int index) {
-    System.out.println("MOVE: " + index);
+    // Don't allow moves if no marbles in chosen pit or not player's turn
+    if (getMarbles(index) == 0
+        || (isPlayerATurn && index > A_MANCALA_POS)
+        || (!isPlayerATurn && index < A_MANCALA_POS)) {
+      return;
+    }
+
+    boolean dropInOwnMancala = false;
+
+    // clone board so players can undo moves
+    previousBoard = board.clone();
+
+    int stonesToDrop = getMarbles(index); // number of stones in selected pit
+    board[index] = 0; // set pit to 0 (get stones)
+
+    // Step to the next pit
+    index = (index + 1) % TOTAL_NUM_PITS;
+
+    // Keep dropping stones until out of stones to drop
+    while (stonesToDrop > 0) {
+      // Player A turn
+      if (isPlayerATurn()) {
+        // Edge case 1: if last stone is in own Mancala => another turn
+        if (index == A_MANCALA_POS && stonesToDrop == 1) {
+          dropInOwnMancala = true;
+        }
+
+        // Edge case 2: if you reach opponent's Mancala => skip and go to your pos
+        if (index == B_MANCALA_POS) {
+          index = 0;
+        }
+
+        /* Edge case 3: if last stone is in empty pit on your side => take stone and stones from
+         * opposite side of opponent's pit and put in your Mancala
+         */
+        if (stonesToDrop == 1 && index < A_MANCALA_POS && board[index] == 0) {
+          int oppositeIndex = B_MANCALA_POS - 1 - index;
+          int oppositeStoneCount = getMarbles(oppositeIndex);
+          board[oppositeIndex] = 0;
+          board[A_MANCALA_POS] += (1 + oppositeStoneCount);
+          board[index]--; // to cancel the add at the end
+        }
+      }
+
+      // Player B turn
+      else {
+        // Edge case 1: if last stone is in own Mancala => another turn
+        if (index == B_MANCALA_POS && stonesToDrop == 1) {
+          dropInOwnMancala = true;
+        }
+
+        // Edge case 2: if you reach opponent's Mancala => skip and go to your pos
+        if (index == A_MANCALA_POS) {
+          index = A_MANCALA_POS + 1;
+        }
+
+        /* Edge case 3: if last stone is in empty pit on your side => take stone and stones from
+         * opposite side of opponent's pit and put in your Mancala
+         */
+        if (stonesToDrop == 1
+            && index > A_MANCALA_POS
+            && index < B_MANCALA_POS
+            && board[index] == 0) {
+          int oppositeIndex = B_MANCALA_POS - 1 - index;
+          int oppositeStoneCount = getMarbles(oppositeIndex);
+          board[oppositeIndex] = 0;
+          board[B_MANCALA_POS] += (1 + oppositeStoneCount);
+          board[index]--; // to cancel the add at the end
+        }
+      }
+
+      // Increase stone count for ith pit by one
+      board[index]++;
+
+      index = (index + 1) % TOTAL_NUM_PITS;
+      stonesToDrop--;
+    }
+
+    // Change turns if not drop in own mancala
+    if (!dropInOwnMancala) {
+      isPlayerATurn = !isPlayerATurn;
+    }
+
+    // Update view
     updateBoard();
   }
 

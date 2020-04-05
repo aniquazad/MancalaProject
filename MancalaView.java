@@ -10,16 +10,20 @@ import java.awt.event.ActionListener;
 import static ram.MenuView.*;
 
 public class MancalaView extends JFrame implements ChangeListener {
+  private MancalaModel model;
+  private JLabel turnLabel;
+
   public static final int FRAME_WIDTH = 1000;
   public static final int FRAME_HEIGHT = 500;
   public static final int UPPER_LOWER_PANEL_HEIGHT = (int) (0.1f * FRAME_HEIGHT);
   public static final int GAME_PANEL_HEIGHT = (int) (0.8f * FRAME_HEIGHT);
   public static final int PIT_WIDTH = (int) ((1f / 8f) * FRAME_WIDTH);
   public static final int PIT_HEIGHT = GAME_PANEL_HEIGHT / 2;
-
   public static final BasicStroke STROKE = new BasicStroke(2.5f);
 
   public MancalaView(MancalaModel model, String style) {
+    this.model = model;
+
     MancalaStyle mancalaStyle;
     switch (style) {
       case "Ocean":
@@ -41,7 +45,7 @@ public class MancalaView extends JFrame implements ChangeListener {
     setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
     getContentPane().setBackground(mancalaStyle.getBackgroundColor());
 
-    JLabel turnLabel = new JLabel("Player " + (model.isPlayerATurn() ? "A" : "B") + "'s Turn");
+    turnLabel = new JLabel("Player " + (model.isPlayerATurn() ? "A" : "B") + "'s Turn");
     turnLabel.setFont(FONT_18);
     turnLabel.setForeground(mancalaStyle.getTextColor());
     turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -170,6 +174,7 @@ public class MancalaView extends JFrame implements ChangeListener {
 
   @Override
   public void stateChanged(ChangeEvent e) {
+    turnLabel.setText("Player " + (model.isPlayerATurn() ? "A" : "B") + "'s Turn");
     repaint();
   }
 }
