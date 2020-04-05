@@ -12,6 +12,7 @@ import static ram.MenuView.*;
 public class MancalaView extends JFrame implements ChangeListener {
   private MancalaModel model;
   private JLabel turnLabel;
+  private JLabel undoRemainingLabel;
 
   public static final int FRAME_WIDTH = 1000;
   public static final int FRAME_HEIGHT = 500;
@@ -151,11 +152,16 @@ public class MancalaView extends JFrame implements ChangeListener {
           }
         });
 
+    undoRemainingLabel = new JLabel("remaining: " + model.getUndoRemaining());
+    undoRemainingLabel.setFont(FONT_18);
+    undoRemainingLabel.setForeground(mancalaStyle.getTextColor());
+
     JPanel undoPanel = new JPanel();
     undoPanel.setBackground(mancalaStyle.getBackgroundColor());
     undoPanel.setPreferredSize(new Dimension(FRAME_WIDTH, UPPER_LOWER_PANEL_HEIGHT));
     undoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, UPPER_LOWER_PANEL_HEIGHT));
     undoPanel.add(undoButton);
+    undoPanel.add(undoRemainingLabel);
 
     // Add to frame
     add(Box.createRigidArea(new Dimension(0, PADDING)));
@@ -175,6 +181,7 @@ public class MancalaView extends JFrame implements ChangeListener {
   @Override
   public void stateChanged(ChangeEvent e) {
     turnLabel.setText("Player " + (model.isPlayerATurn() ? "A" : "B") + "'s Turn");
+    undoRemainingLabel.setText("remaining: " + model.getUndoRemaining());
     repaint();
   }
 }

@@ -16,14 +16,15 @@ public class MancalaModel {
   private int[] previousBoard; // the previous board (if undo is chosen)
 
   private boolean isPlayerATurn;
+  private boolean isPlayerATurnPrevious;
 
   public static final int TOTAL_NUM_PITS = 14;
   public static final int NUM_PITS_PER_PLAYER = TOTAL_NUM_PITS / 2 - 1;
   public static final int A_MANCALA_POS = TOTAL_NUM_PITS / 2 - 1;
   public static final int B_MANCALA_POS = TOTAL_NUM_PITS - 1;
 
-  private int aUndoCount;
-  private int bUndoCount;
+  private boolean justUndo = true;
+  private int undoCount;
   private static final int MAX_UNDO_COUNT = 3;
 
   private static final int A_WINNER = 0;
@@ -45,6 +46,7 @@ public class MancalaModel {
 
     // 50-50 chance for who starts
     isPlayerATurn = Math.random() < 0.5f;
+    isPlayerATurnPrevious = isPlayerATurn;
   }
 
   /**
@@ -86,64 +88,18 @@ public class MancalaModel {
    * made).
    */
   public void undoMove() {
-    board = previousBoard.clone();
-    updateBoard();
-  }
+    // Check if can undo
+    if (!justUndo && undoCount < MAX_UNDO_COUNT) {
+      justUndo = true;
+      undoCount++;
 
-  /** Increments player A's undo count */
-  public void incrAUndoCount() {
-    aUndoCount++;
-  }
+      // Apply undo
+      board = previousBoard.clone();
+      isPlayerATurn = isPlayerATurnPrevious;
 
-  /** Increments player B's undo count */
-  public void incrBUndoCount() {
-    bUndoCount++;
-  }
-
-  /** Resets player A's undo count */
-  public void resetAUndoCount() {
-    aUndoCount = 0;
-  }
-
-  /** Resets player B's undo count */
-  public void resetBUndoCount() {
-    bUndoCount = 0;
-  }
-
-  /**
-   * Determines if player A can still undo
-   *
-   * @return if player A can undo
-   */
-  public boolean canAUndo() {
-    return aUndoCount < MAX_UNDO_COUNT;
-  }
-
-  /**
-   * Determines if player B can still undo
-   *
-   * @return if player B can undo
-   */
-  public boolean canBUndo() {
-    return bUndoCount < MAX_UNDO_COUNT;
-  }
-
-  /**
-   * Returns the current Mancala board
-   *
-   * @return the current Mancala board
-   */
-  public int[] getCurrentBoard() {
-    return board;
-  }
-
-  /**
-   * Returns the previous Mancala board
-   *
-   * @return the previous Mancala board
-   */
-  public int[] getPreviousBoard() {
-    return previousBoard;
+      // Update view
+      updateBoard();
+    }
   }
 
   /**
@@ -202,11 +158,10 @@ public class MancalaModel {
       return;
     }
 
-    boolean dropInOwnMancala = false;
-
-    // clone board so players can undo moves
+    // Save previous board for undo
     previousBoard = board.clone();
 
+    boolean dropInOwnMancala = false;
     int stonesToDrop = getMarbles(index); // number of stones in selected pit
     board[index] = 0; // set pit to 0 (get stones)
 
@@ -277,10 +232,21 @@ public class MancalaModel {
       stonesToDrop--;
     }
 
+    // Reset undo count
+    if (isPlayerATurn != isPlayerATurnPrevious) {
+      undoCount = 0;
+    }
+
+    // Save previous turn
+    isPlayerATurnPrevious = isPlayerATurn;
+
     // Change turns if not drop in own mancala
     if (!dropInOwnMancala) {
       isPlayerATurn = !isPlayerATurn;
     }
+
+    // Allow undo
+    justUndo = false;
 
     // Update view
     updateBoard();
@@ -303,5 +269,14 @@ public class MancalaModel {
    */
   public boolean isPlayerATurn() {
     return isPlayerATurn;
+  }
+
+  /**
+   * Returns the number of remaining undos.
+   *
+   * @return the number of remaining undos
+   */
+  public int getUndoRemaining() {
+    return MAX_UNDO_COUNT - undoCount;
   }
 }
