@@ -196,7 +196,82 @@ public class MancalaGameModel {
    */
   public void move(int index) {
     System.out.println("MOVE: " + index);
+    
+    boolean dropInOwnMancala = false;
+    
+    //clone board so players can undo moves
+    previousBoard = board.clone();
+    
+    int stonesToDrop = getMarbles(index); //number of stones in selected pit
+    board[index] = 0; //set pit to 0 (get stones)
+    int lastIndex = index + stonesToDrop; //last index to reach
+    
+    for(int i = index + 1; i <= lastIndex; stonesToDrop--,i++)
+    {
+    	//Player A turn
+    	if(isPlayerATurn() == true)
+    	{
+    		//edge case 1: if last stone is in own Mancala => another turn
+    		if(i == A_MANCALA_POS && stonesToDrop == 1)
+    		{
+    			dropInOwnMancala = true;
+    			//go again
+    		}
+    		//edge case 2: if you reach opponent's Mancala => skip and go to your pos
+    		if(i == B_MANCALA_POS)
+    		{
+    			i = 0;
+    		}
+    	    /*edge case 3: if last stone is in empty pit on your side => take stone and stones from
+    	     * opposite side of opponent's pit and put in your Mancala
+    	     */
+    		if(stonesToDrop == 1 && (i >= 0 && i <= A_MANCALA_POS-1))
+    		{
+    			if((board[12 - i] > 0) && (board[i] == 0))
+    			{
+    				int opponentStoneCount = getMarbles(12-i);
+    				board[12-i] = 0;
+    				board[A_MANCALA_POS] += (stonesToDrop + opponentStoneCount);
+    		    	board[i] = 0;
+    				//stonesToDrop--;
+    			}
+    		}	
+    	}
+    	//Player B turn
+    	else
+    	{
+    		//edge case 1: if last stone is in own Mancala => another turn
+    		if(i == B_MANCALA_POS && stonesToDrop == 1)
+    		{
+    			dropInOwnMancala = true;
+    			//go again
+    		}
+    		//edge case 2: if you reach opponent's Mancala => skip and go to your pos
+    		if(i == A_MANCALA_POS)
+    		{
+    			i = 0;
+    		}
+    	    /*edge case 3: if last stone is in empty pit on your side => take stone and stones from
+    	     * opposite side of opponent's pit and put in your Mancala
+    	     */
+    		if(stonesToDrop == 1 && (i >= 0 && i <= B_MANCALA_POS-1))
+    		{
+    			if((board[12 - i] > 0) && (board[i] == 0))
+    			{
+    				int opponentStoneCount = getMarbles(12-i);
+    				board[12-i] = 0;
+    				board[B_MANCALA_POS] += (stonesToDrop + opponentStoneCount);
+    		    	board[i] = 0;
+    			}
+    		}
+    	}
+    	board[i]++;
+    }
     updateBoard();
+    if(isPlayerATurn == true && dropInOwnMancala == true)
+    	isPlayerATurn = true;
+    else
+    	isPlayerATurn = false;
   }
 
   /**
