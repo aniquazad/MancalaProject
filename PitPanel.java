@@ -7,16 +7,21 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
+import static ram.MenuView.FONT_18;
+import static ram.MenuView.PADDING;
+
 public class PitPanel extends JPanel {
-  private MancalaGameModel model;
+  private MancalaModel model;
   private int index;
   private boolean isA;
+  private MancalaStyle style;
   private Random random;
 
-  public PitPanel(MancalaGameModel model, int index, boolean isA) {
+  public PitPanel(MancalaModel model, int index, boolean isA, MancalaStyle style) {
     this.model = model;
     this.index = index;
     this.isA = isA;
+    this.style = style;
     random = new Random();
   }
 
@@ -55,28 +60,26 @@ public class PitPanel extends JPanel {
           @Override
           public void mouseExited(MouseEvent e) {}
         });
-    g2.setStroke(MancalaGameView.STROKE);
+    g2.setColor(style.getPitFillColor());
+    g2.fill(pit);
+    g2.setStroke(MancalaView.STROKE);
+    g2.setColor(style.getPitDrawColor());
     g2.draw(pit);
 
     // Pit name
-    g2.setFont(MancalaGameView.FONT);
+    g2.setColor(style.getTextColor());
+    g2.setFont(FONT_18);
     FontMetrics metrics = g2.getFontMetrics();
-    String pitName = isA ? "A" + (index + 1) : "B" + (index - MancalaGameModel.NUM_PITS_PER_PLAYER);
+    String pitName = isA ? "A" + (index + 1) : "B" + (index - MancalaModel.NUM_PITS_PER_PLAYER);
     float x = (getWidth() - metrics.stringWidth(pitName)) / 2;
-    float y =
-        isA
-            ? pitY + pitHeight + metrics.getAscent() + MancalaGameView.PADDING
-            : pitY - MancalaGameView.PADDING;
+    float y = isA ? pitY + pitHeight + metrics.getAscent() + PADDING : pitY - PADDING;
     g2.drawString(pitName, x, y);
 
     // Marble count
     int numMarbles = model.getMarbles(index);
     String marbleStr = String.valueOf(numMarbles);
     x = (getWidth() - metrics.stringWidth(marbleStr)) / 2;
-    y =
-        isA
-            ? pitY - MancalaGameView.PADDING
-            : pitY + pitHeight + metrics.getAscent() + MancalaGameView.PADDING;
+    y = isA ? pitY - PADDING : pitY + pitHeight + metrics.getAscent() + PADDING;
     g2.drawString(marbleStr, x, y);
 
     // Draw randomly positioned marbles
@@ -91,9 +94,9 @@ public class PitPanel extends JPanel {
         marble = new Ellipse2D.Double(x, y, marbleSize, marbleSize);
       } while (!pit.contains(marble.x, marble.y, marble.width, marble.height));
 
-      g2.setColor(Color.GRAY);
+      g2.setColor(style.getMarbleFillColor());
       g2.fill(marble);
-      g2.setColor(Color.BLACK);
+      g2.setColor(style.getMarbleDrawColor());
       g2.draw(marble);
     }
   }
