@@ -69,7 +69,36 @@ public class MenuView extends JFrame {
             }
           }
         });
-
+    
+    JButton helpButton = new JButton("HELP");
+    helpButton.setFont(FONT_18);
+    helpButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+    helpButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+    helpButton.addActionListener(
+            new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) 
+              {
+            	  if(e.getSource() == helpButton)
+            	  {
+            		  String s = "--The board consists of two rows of pits. 3-4 pieces of stones are placed in each of the 12 holes.\n";
+            		  s += "--Each player has a large pit called Mancala to the right side of the board.\n";
+            		  s += "--One player starts the game by picking up all of the stones in any one of his own pits.\n";
+            		  s += "Moving counter-clock wise, the player places one in each pit starting with the next pit until the stones run out.\n";
+            		  s += "If you run into your own Mancala, place one stone in it.\n";
+            		  s += "If there are more stones to go past your own Mancala, continue placing them into the opponent's pits.\n";
+            		  s += "--Skip your opponent's Mancala pit.\n";
+            		  s += "--If the last stone you drop is your own Mancala, you get a free turn.\n";
+            		  s += "--If the last stone you drop is in an empty pit on your side, you get to take that stone and all of your opponents stones that are in the opposite pit.\n";
+            		  s += "Place all captured stones in your own Mancala.\n";
+            		  s += "--The game ends when all six pits on one side of the Mancala board are empty.\n";
+            		  s += "The player who still has stones on his side of the board when the game ends captures all of those pieces and place them in his Mancala.\n";
+            		  s += "The player with the most stones in his Mancala wins.\n";
+            		  JOptionPane.showMessageDialog(helpButton,s, "HOW TO PLAY", JOptionPane.INFORMATION_MESSAGE);
+            	  }
+              }
+            });
+    
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
     mainPanel.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING));
@@ -86,6 +115,7 @@ public class MenuView extends JFrame {
     mainPanel.add(volcanoStyleButton);
     mainPanel.add(Box.createRigidArea(paddingDim));
     mainPanel.add(playButton);
+    mainPanel.add(helpButton);
 
     // Add to frame
     add(mainPanel);
