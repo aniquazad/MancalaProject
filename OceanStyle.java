@@ -2,6 +2,12 @@ package ram;
 
 import java.awt.*;
 
+/**
+ * A class which defines a concrete strategy for the Strategy pattern. 
+ * In this case, it makes the board an ocean theme.
+ * @author Aniqua Azad, Malaak Khalil, Ryan Tran
+ *
+ */
 public class OceanStyle implements MancalaStyle {
   private static final Color BACKGROUND_COLOR = new Color(130, 218, 255);
   private static final Color TEXT_COLOR = new Color(150, 0, 255);

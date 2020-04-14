@@ -6,6 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
+/**
+ * This class is one of the Views in the MVC pattern. It displays the main
+ * menu and allows the players to customize the game.
+ * 
+ * @author Aniqua Azad, Malaak Khalil, Ryan Tran
+ *
+ */
 public class MenuView extends JFrame {
   public static final int BUTTON_WIDTH = 100;
   public static final int BUTTON_HEIGHT = 35;
@@ -13,6 +20,10 @@ public class MenuView extends JFrame {
   public static final Font FONT_18 = new Font("SansSerif", Font.BOLD, 18);
   public static final Font FONT_25 = new Font("SansSerif", Font.BOLD, 25);
 
+  /**
+   * Creates the menu for the Mancala application and allows players
+   * to customize their game.
+   */
   public MenuView() {
     setTitle("Mancala Menu - Team RAM");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +81,7 @@ public class MenuView extends JFrame {
           }
         });
 
+    //help button for first-time players
     JButton helpButton = new JButton("HELP");
     helpButton.setFont(FONT_18);
     helpButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -79,6 +91,7 @@ public class MenuView extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
             if (e.getSource() == helpButton) {
+            	//the rules for the game
               StringBuilder strBuilder = new StringBuilder();
               strBuilder.append(
                   "--The board consists of two rows of pits. 3-4 pieces of stones are placed in each of the 12 holes.\n");
