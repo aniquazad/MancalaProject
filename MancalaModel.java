@@ -27,9 +27,9 @@ public class MancalaModel {
   private int undoCount;
   private static final int MAX_UNDO_COUNT = 3;
 
-  private static final int A_WINNER = 0;
-  private static final int B_WINNER = 1;
-  private static final int TIE = 2;
+  public static final int A_WINNER = 0;
+  public static final int B_WINNER = 1;
+  public static final int TIE = 2;
 
   /** Creates an instance of an empty Mancala Board */
   public MancalaModel() {
@@ -128,15 +128,8 @@ public class MancalaModel {
    * @return 0 if player A is winner, 1 if player B is winner, 2 if tie
    */
   public int getWinner() {
-    int playerAStoneCount = 0;
-    int playerBStoneCount = 0;
-
-    for (int i = 0; i <= A_MANCALA_POS; i++) {
-      playerAStoneCount += board[i];
-    }
-    for (int i = A_MANCALA_POS + 1; i <= B_MANCALA_POS; i++) {
-      playerBStoneCount += board[i];
-    }
+    int playerAStoneCount = board[A_MANCALA_POS];
+    int playerBStoneCount = board[B_MANCALA_POS];
 
     // Winner is player with more stones
     if (playerAStoneCount == playerBStoneCount) {
@@ -152,7 +145,7 @@ public class MancalaModel {
    */
   public void move(int index) {
     // Don't allow moves if no marbles in chosen pit or not player's turn
-    if (getMarbles(index) == 0
+    if (board[index] == 0
         || (isPlayerATurn && index > A_MANCALA_POS)
         || (!isPlayerATurn && index < A_MANCALA_POS)) {
       return;
@@ -162,7 +155,7 @@ public class MancalaModel {
     previousBoard = board.clone();
 
     boolean dropInOwnMancala = false;
-    int stonesToDrop = getMarbles(index); // number of stones in selected pit
+    int stonesToDrop = board[index]; // number of stones in selected pit
     board[index] = 0; // set pit to 0 (get stones)
 
     // Step to the next pit
@@ -190,7 +183,7 @@ public class MancalaModel {
             && index < A_MANCALA_POS
             && board[oppositeIndex] > 0
             && board[index] == 0) {
-          int oppositeStoneCount = getMarbles(oppositeIndex);
+          int oppositeStoneCount = board[oppositeIndex];
           board[oppositeIndex] = 0;
           board[A_MANCALA_POS] += (1 + oppositeStoneCount);
           board[index]--; // to cancel the add at the end
@@ -218,7 +211,7 @@ public class MancalaModel {
             && index < B_MANCALA_POS
             && board[oppositeIndex] > 0
             && board[index] == 0) {
-          int oppositeStoneCount = getMarbles(oppositeIndex);
+          int oppositeStoneCount = board[oppositeIndex];
           board[oppositeIndex] = 0;
           board[B_MANCALA_POS] += (1 + oppositeStoneCount);
           board[index]--; // to cancel the add at the end
@@ -230,6 +223,18 @@ public class MancalaModel {
 
       index = (index + 1) % TOTAL_NUM_PITS;
       stonesToDrop--;
+    }
+
+    // Game over, all marbles left in pits go to respective mancalas
+    if (gameOver()) {
+      for (int i = 0; i < A_MANCALA_POS; i++) {
+        board[A_MANCALA_POS] += board[i];
+        board[i] = 0;
+      }
+      for (int i = A_MANCALA_POS + 1; i < B_MANCALA_POS; i++) {
+        board[B_MANCALA_POS] += board[i];
+        board[i] = 0;
+      }
     }
 
     // Reset undo count

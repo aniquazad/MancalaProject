@@ -3,9 +3,6 @@ package ram;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.graalvm.compiler.core.common.alloc.UniDirectionalTraceBuilder;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -184,34 +181,34 @@ public class MancalaView extends JFrame implements ChangeListener {
 
   @Override
   public void stateChanged(ChangeEvent e) {
-	String turnLabelTxt;
-	String undoRemainingLabelTxt;
     if (model.gameOver()) {
-    	int winner = model.getWinner();
-    	turnLabelTxt = "Player " + (winner == 0 ? "A" : "B") + " won!";
-    	undoRemainingLabelTxt = "Game over!";
-    	undoButton.setText("Menu");
-    	// Repaint menu view.
-    	for (ActionListener AL: undoButton.getActionListeners()) {
-    		undoButton.removeActionListener(AL);
-    	}
-        undoButton.addActionListener(
-                new ActionListener() {
-                  @Override
-                  public void actionPerformed(ActionEvent e) {
-                    dispose();
-                    new MenuView();
-                  }
-                });
-    	
+      // Change turn label's text to display winner
+      int winner = model.getWinner();
+      turnLabel.setText(
+          winner == MancalaModel.TIE
+              ? "The game is a Tie!"
+              : "Player " + (winner == MancalaModel.A_WINNER ? "A" : "B") + " won!");
+
+      // Change undo remaining label and undo button text to indicate game over
+      undoRemainingLabel.setText("Game over!");
+      undoButton.setText("Menu");
+
+      // Change undo button to main menu button
+      undoButton.removeActionListener(undoButton.getActionListeners()[0]);
+      undoButton.addActionListener(
+          new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              // Destroy this window and create a new main menu view
+              dispose();
+              new MenuView();
+            }
+          });
+    } else {
+      turnLabel.setText("Player " + (model.isPlayerATurn() ? "A" : "B") + "'s Turn");
+      undoRemainingLabel.setText("remaining: " + model.getUndoRemaining());
     }
-    else {
-    	turnLabelTxt = "Player " + (model.isPlayerATurn() ? "A" : "B") + "'s Turn";
-    	undoRemainingLabelTxt = "remaining: " + model.getUndoRemaining();
-    }
-    turnLabel.setText(turnLabelTxt);
-    // Repaints menu view
-    undoRemainingLabel.setText(undoRemainingLabelTxt);
+
     repaint();
   }
 }
