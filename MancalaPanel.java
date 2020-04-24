@@ -12,8 +12,8 @@ import static ram.MenuView.PADDING;
 
 /**
  * This class creates the Mancala board and the stones in each pit.
- * @author aniqu
  *
+ * @author Aniqua Azad, Malaak Khalil, Ryan Tran
  */
 public class MancalaPanel extends JPanel {
   private MancalaModel model;
@@ -24,7 +24,8 @@ public class MancalaPanel extends JPanel {
   private ArrayList<Ellipse2D.Double> marbles;
 
   /**
-   * Creates an instance of the MancalaPanel
+   * Creates an instance of the MancalaPanel.
+   *
    * @param model the Model from the MVC pattern
    * @param isA determines if it is player A
    * @param style the style of the board
@@ -39,9 +40,7 @@ public class MancalaPanel extends JPanel {
   }
 
   @Override
-  /**
-   * Creates the Mancala board and stones
-   */
+  /** Creates the Mancala board and stones. */
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;

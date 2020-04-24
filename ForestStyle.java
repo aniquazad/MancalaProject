@@ -3,10 +3,10 @@ package ram;
 import java.awt.*;
 
 /**
- * A class which defines a concrete strategy for the Strategy pattern. 
- * In this case, it makes the board a forest theme.
- * @author Aniqua Azad, Malaak Khalil, Ryan Tran
+ * A class which defines a concrete strategy for the Strategy pattern. In this case, it makes the
+ * board a forest theme.
  *
+ * @author Aniqua Azad, Malaak Khalil, Ryan Tran
  */
 public class ForestStyle implements MancalaStyle {
   private static final Color BACKGROUND_COLOR = new Color(172, 255, 139);

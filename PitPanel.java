@@ -11,6 +11,11 @@ import java.util.Random;
 import static ram.MenuView.FONT_18;
 import static ram.MenuView.PADDING;
 
+/**
+ * This class creates the pit and related text for each pit.
+ *
+ * @author Aniqua Azad, Malaak Khalil, Ryan Tran
+ */
 public class PitPanel extends JPanel {
   private MancalaModel model;
   private int index;
@@ -20,6 +25,14 @@ public class PitPanel extends JPanel {
   private Random random;
   private ArrayList<Ellipse2D.Double> marbles;
 
+  /**
+   * Creates an instance of PitPanel.
+   *
+   * @param model the model
+   * @param index the index of this pit
+   * @param isA if this pit belongs to player A
+   * @param style the style to apply to this pit
+   */
   public PitPanel(MancalaModel model, int index, boolean isA, MancalaStyle style) {
     this.model = model;
     this.index = index;

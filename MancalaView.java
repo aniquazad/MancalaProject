@@ -10,12 +10,10 @@ import java.awt.event.ActionListener;
 import static ram.MenuView.*;
 
 /**
- * This class is one of the views and the Controller in the MVC pattern for the Mancala
- * application. It holds the actual Mancala board with stones and allows
- * players to interact with the board.
- * 
- * @author Aniqua Azad, Malaak Khalil, Ryan Tran
+ * This class is one of the views and the Controller in the MVC pattern for the Mancala application.
+ * It holds the actual Mancala board with stones and allows players to interact with the board.
  *
+ * @author Aniqua Azad, Malaak Khalil, Ryan Tran
  */
 public class MancalaView extends JFrame implements ChangeListener {
   private MancalaModel model;
@@ -32,7 +30,8 @@ public class MancalaView extends JFrame implements ChangeListener {
   public static final BasicStroke STROKE = new BasicStroke(2.5f);
 
   /**
-   * Creates the instance of the Mancala board with specified attributes
+   * Creates the instance of the Mancala board with specified attributes.
+   *
    * @param model the Model from the MVC pattern
    * @param style the style of the board
    */
@@ -193,9 +192,7 @@ public class MancalaView extends JFrame implements ChangeListener {
   }
 
   @Override
-  /**
-   * Alters the state of the board when a move is made
-   */
+  /** Alters the state of the board when a move is made. */
   public void stateChanged(ChangeEvent e) {
     if (model.gameOver()) {
       // Change turn label's text to display winner

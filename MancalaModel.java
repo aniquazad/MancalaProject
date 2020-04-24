@@ -31,7 +31,7 @@ public class MancalaModel {
   public static final int B_WINNER = 1;
   public static final int TIE = 2;
 
-  /** Creates an instance of an empty Mancala Board */
+  /** Creates an instance of an empty Mancala Board. */
   public MancalaModel() {
     /*
      * 	    12 11 10 9 8 7
@@ -50,7 +50,7 @@ public class MancalaModel {
   }
 
   /**
-   * Creates the Mancala board with the players' choice of stones per pit
+   * Creates the Mancala board with the players' choice of stones per pit.
    *
    * @param numStones the number of stones per pit
    */
@@ -67,7 +67,7 @@ public class MancalaModel {
   }
 
   /**
-   * Adds a ChangeListener
+   * Adds a ChangeListener.
    *
    * @param cl ChangeListener to be added
    */
@@ -103,7 +103,7 @@ public class MancalaModel {
   }
 
   /**
-   * Determines if the game is over
+   * Determines if the game is over.
    *
    * @return if game is over
    */
@@ -123,7 +123,7 @@ public class MancalaModel {
   }
 
   /**
-   * Returns the winner of the game
+   * Returns the winner of the game.
    *
    * @return 0 if player A is winner, 1 if player B is winner, 2 if tie
    */
